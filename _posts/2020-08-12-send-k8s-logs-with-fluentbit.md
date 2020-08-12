@@ -5,7 +5,7 @@ subtitle:
 tags: [logs]
 ---
 
-If you're running a kubernetes environment, you probably need to collect logs from your pods. You will have the choice between paid or free product.
+If you're running a kubernetes environment, you probably need to collect logs from your pods.
 
 You've got different choices from paid to opensource tool, in this post, I'll choose [fluentbit](https://docs.fluentbit.io/manual/) because it's lightweight and has a helm chart I can use.
 
@@ -16,14 +16,14 @@ You've got different choices from paid to opensource tool, in this post, I'll ch
 
 Logging in kubernetes is something dynamic, every new application running in the cluster should be able to send his logs without any human intervention. Thanks to daemonSet object, which allow us to run a pod on any nodes inside a cluster.
 
-I remember few years ago, when I used nagios and I had to add manually every single new host to be able to monitor it.
+I remember few years ago, when I used nagios and I had to add manually every single new host to be able to monitor it. It was painful.
 
 **The log stream is represented by this diagram**
 
 ![Fluentbit flow](https://gblobscdn.gitbook.com/assets%2F-LKKSx-3LBTCtaHbg0gl%2F-LKKTm4Y55lytnFhqfG1%2F-LKKTwUrRtRcGfkhN7YV%2Flogging_pipeline_input.png?alt=media)
 
 
-This log stream is represented in fluent-bit.conf
+This log stream is declared in different sections inside fluent-bit.conf
 
 ***Service (not present on diagram)***: the global configuration of fluentbit
 
@@ -37,8 +37,10 @@ This log stream is represented in fluent-bit.conf
 fluentbit keep it in memory by default
 
 ***Output***: Where to send datas (elasticsearch, influxdb, kafka, splunk...)
- 
+
+
 ## Requirements
+
 
 - A functional Elasticsearch
 - A functional Kibana
@@ -87,7 +89,7 @@ backend:
     tls_verify: "off"
 ```
 
-Deploy the helm release, it's gonna run fluentbit as a daemonset. Configuration set above will be store as a configMap. 
+Deploy fluentbit. Configuration set above will be store as a configMap. 
 
 ```
 helm install  my-release stable/fluent-bit -f values.yaml
@@ -113,7 +115,7 @@ Copyright (C) Treasure Data
 
 ```
 
-If connection cannot be made with elasticsearch, you should see something like this
+If connection cannot be made with elasticsearch, you will have errors like below
 
 ```
 ...
@@ -123,13 +125,15 @@ If connection cannot be made with elasticsearch, you should see something like t
 [2020/08/12 18:26:46] [ warn] [engine] failed to flush chunk '1-1597256805.935252212.flb', retry in 9 seconds: task_id=6, input=tail.0 > output=es.0
 ...
 ```
+
+
 ### Verify Elasticsearch received datas and created the index
 
 Fluentbit creates daily index with the pattern kubernetes_cluster-YYYY-MM-DD, verify that your index has been created on elasticsearch.
 
 ![ES Monitoring](https://github.com/ptran32/ptran32.github.io/blob/master/_posts/img/05-fluentbit-es.png?raw=true)
 
-If everything is ok, you can create an index pattern with kubernetes_cluster-*, which will allow you to display the index documents from the UI.
+If everything is ok, you can create an index pattern with kubernetes*, which will allow you to display the index documents from the UI.
 
 
 ### Generate logs and verify they appear on Kibana
@@ -140,7 +144,7 @@ I used this project ro generate random logs: [https://github.com/mingrammer/flog
 kubectl run log-gen --image mingrammer/flog
 ```
 
-You should see your datas like below.
+You should now see your logs with all kubernetes metadatas added by fluentbit.
 
 ![ES Monitoring](https://github.com/ptran32/ptran32.github.io/blob/master/_posts/img/06-fluentbit-es.png?raw=true)
 
