@@ -5,6 +5,35 @@ subtitle:
 tags: [data]
 ---
 
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://ptran32.github.io/2020-08-08-hot-warm-cold-elasticsearch/"
+  },
+  "headline": "",
+  "description": "Hot-warm-cold architecture with Elasticsearch",
+  "image": "https://static-www.elastic.co/v3/assets/bltefdd0b53724fa2ce/blt5ebe80fb665aef6b/5ea8c8f26b62d4563b6ecec2/brand-elasticsearch-220x130.svg",  
+  "author": {
+    "@type": "",
+    "name": ""
+  },  
+  "publisher": {
+    "@type": "Organization",
+    "name": "",
+    "logo": {
+      "@type": "ImageObject",
+      "url": ""
+    }
+  },
+  "datePublished": "2020-08-08",
+  "dateModified": "2020-08-08"
+}
+</script>
+
+
 Running an Elasticsearch cluster could be a real nighmare when you've got a lot of datas to ingest, design and configuration optimization needs to be think upstream. We're gonna use a feature included in x-pack: Index Lifecycle Management (ILM)
 
 ![Elastic Logo](https://static-www.elastic.co/v3/assets/bltefdd0b53724fa2ce/blt5ebe80fb665aef6b/5ea8c8f26b62d4563b6ecec2/brand-elasticsearch-220x130.svg)
