@@ -49,7 +49,6 @@ Argo rollout is deployed on your cluster with a controller and a set of CRD. Ins
 ```
 kubectl create namespace argo-rollouts
 kubectl apply -n argo-rollouts -f https://raw.githubusercontent.com/argoproj/argo-rollouts/stable/manifests/install.yaml
-
 ```
 
 **Management**
@@ -59,7 +58,6 @@ kubectl command will work as usual, for convenience, they also provide a [plugin
 ```
 # Example of command
 kubectl argo rollouts list rollouts 
-
 ```
 
 **Convert existing manifest**
@@ -82,9 +80,9 @@ The benefit of using Argo is that these steps are managed by the controller, plu
 
 ## Deploy a demo app with Canary
 
-We will deploy the v1 of a random app, then the v2 using both canary and blue green deployment. 
+We will deploy the v1 of a random app, then the v2 using canary 
 
-The app is an http server which returns the pod name and app version. The app version is managed by an environment variable, in next section, we will change it to trigger an upgrade. 
+The app is an http server which returns the pod name and app version. The app version output is managed by an environment variable, in next section, we will change it to trigger an upgrade. 
 
 ```
 # App output
@@ -102,7 +100,7 @@ The rollout below define those steps:
 
 - deploy 20% of the whole replicas (set to 10)
 - Pause the deployment, until a user confirm and "promote" it
-- Continue the with 40%, Wait for 10s.
+- Continue with 40%, wait for 10s.
 - Continue with 60%, wait for 10s
 - Continue with 80%, wait for 10s
 - Continue to reach 100% (this step is invisible and is actually after the last pause step)
@@ -193,13 +191,13 @@ NAME     DESIRED   CURRENT   UP-TO-DATE   AVAILABLE
 my-app   10        10        10           10
 ```
 
-Here the graphical reprentation using [kubeview](https://github.com/benc-uk/kubeview). This is totally optionnal, I just spin it up for fun. 
+Here the graphical reprentation using [kubeview](https://github.com/benc-uk/kubeview) as well. 
 
 ![Kubeview screenshot](https://github.com/ptran32/ptran32.github.io/blob/master/_posts/img/07-argorollouts.png?raw=true)
 
 
 
-We can now prepare to deploy the v2 of our application.
+We can now modify our yml file to prepare the v2 of our application.
 
 ```
 # Content of rollout.yml (truncated)
@@ -228,28 +226,26 @@ We can now prepare to deploy the v2 of our application.
 ```
 
 Apply the new manifest
-
 ```
 kubectl apply -f rollout.yml
 ```
 
 Wath the canary upgrade in live
-
 ```
 kubectl argo rollouts get rollout my-app --watch
 ```
 
-Like expected, we now have 20% of our traffic to v2 and the deployment has stopped, waiting for a human validation
+Like expected, we now have 20% of our traffic to v2 and the deployment has paused, waiting for a human validation.
 
 ![argorollouts-canary screenshot](https://github.com/ptran32/ptran32.github.io/blob/master/_posts/img/08-argorollouts-canary.png?raw=true)
 
 
+If the application looks fine to you, you can now promote the rollout.
 ```
 kubectl argo rollouts promote my-app 
 ```
 
-The upgade process continue following our steps defined befire.
-
+The upgade process continue following steps defined before.
 ![argorollouts-canary screenshot](https://github.com/ptran32/ptran32.github.io/blob/master/_posts/img/09-argorollouts-canary2.png?raw=true)
 
 
@@ -270,26 +266,35 @@ Create the v1
 kubectl apply -f https://raw.githubusercontent.com/argoproj/argo-rollouts/master/examples/rollout-bluegreen.yaml
 ```
 
-![argorollouts-canary screenshot](https://github.com/ptran32/ptran32.github.io/blob/master/_posts/img/10-argorollouts-bluegreen1.png?raw=true)
+![argorollouts-canary screenshot](https://github.com/ptran32/ptran32.github.io/blob/master/_posts/img/10-argorollouts-bluegreen.png?raw=true)
+
 
 Create the v2
 
-Modify the manifest of v1 and change the image firld from argoprof/rollouts-demo:blue to argoprof/rollouts-demo:green
+Modify the manifest of v1 and change the image field from argoprof/rollouts-demo:blue to argoprof/rollouts-demo:green
 
 ```
-kubectl edit rollouts rollout-bluegreen (output is truncated). It's gonna trigger the upgrade.
+kubectl edit rollouts rollout-bluegreen (truncate output). By changing this value, it's gonna trigger an upgrade.
 
 ...
 image: argoproj/rollouts-demo:green
 ...
 ```
 
+You should now have v1 and v2 running alongside
+![argorollouts-canary screenshot](https://github.com/ptran32/ptran32.github.io/blob/master/_posts/img/13-argorollouts-bluegreen.png?raw=true)
+
+![argorollouts-canary screenshot](https://github.com/ptran32/ptran32.github.io/blob/master/_posts/img/11-argorollouts-bluegreen.png?raw=true)
+
+
+If the application looks fine to you, you can now promote the rollout.
 ```
-kubectl argo rollouts list rollouts
+kubectl argo rollouts promote rollout-bluegreen
 ```
 
-![argorollouts-canary screenshot](https://github.com/ptran32/ptran32.github.io/blob/master/_posts/img/11-argorollouts-bluegreen2.png?raw=true)
-![argorollouts-canary screenshot](https://github.com/ptran32/ptran32.github.io/blob/master/_posts/img/12-argorollouts-bluegreen3.png?raw=true)
+The ActiveService now points to the v2 ReplicaSet and scaled down the v1.
+
+![argorollouts-canary screenshot](https://github.com/ptran32/ptran32.github.io/blob/master/_posts/img/12-argorollouts-bluegreen.png?raw=true)
 
 
 
