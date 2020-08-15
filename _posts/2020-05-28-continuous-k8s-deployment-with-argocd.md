@@ -52,3 +52,31 @@ This project will deploy one application on minikube using argoCD and will be ac
 You can follow the instructions here:
 
 [https://github.com/ptran32/argocd-deployment](https://github.com/ptran32/argocd-deployment)
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "NewsArticle",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://ptran32.github.io/2020-05-28-continuous-k8s-deployment-with-argocd/"
+  },
+  "headline": "Continuous Kubernetes deployment with Argo CD",
+  "description": "How-to use Argo CD for continuous deployment with kubernetes",
+  "image": "https://github.com/ptran32/argocd-deployment/blob/master/img/argo-ui-schema.png?raw=true",  
+  "author": {
+    "@type": "Person",
+    "name": "Patrice"
+  },  
+  "publisher": {
+    "@type": "Organization",
+    "name": "Patrice",
+    "logo": {
+      "@type": "ImageObject",
+      "url": ""
+    }
+  },
+  "datePublished": "2020-05-18",
+  "dateModified": "2020-08-15"
+}
+</script>

@@ -189,3 +189,33 @@ I skept status and reclaim policy as it would bring more complexity to this post
 I would recommend to avoid using persistent storage for the first workloads that you are going to create/migrate and put stateless applications first.
 
 Then, when you'll need, use dynanic volume provisionning instead of the static way for an easier management.
+
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "NewsArticle",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://ptran32.github.io/2020-07-17-persistent-storage-with-k8s/"
+  },
+  "headline": "Persistent storage with kubernetes",
+  "description": "How Persistent storage works in kubernetes. Persistent volume and persistent volume claim",
+  "image": "https://i.ytimg.com/vi/OulmwTYTauI/maxresdefault.jpg",  
+  "author": {
+    "@type": "Person",
+    "name": "Patrice"
+  },  
+  "publisher": {
+    "@type": "Organization",
+    "name": "Patrice",
+    "logo": {
+      "@type": "ImageObject",
+      "url": ""
+    }
+  },
+  "datePublished": "2020-07-17",
+  "dateModified": "2020-07-17"
+}
+</script>

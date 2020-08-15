@@ -158,3 +158,33 @@ Peace out ;)
 ## Useful link
 
 [Fluentd vs Fluentbit ](https://fluentbit.io/documentation/0.8/about/fluentd_and_fluentbit.html)
+
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "NewsArticle",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://ptran32.github.io/2020-08-12-send-k8s-logs-with-fluentbit/"
+  },
+  "headline": "Send kubernetes logs with fluentbit",
+  "description": "Send kubernetes logs with fluentbit",
+  "image": "https://gblobscdn.gitbook.com/assets%2F-LKKSx-3LBTCtaHbg0gl%2F-M4M38npAHl6IlFGKh9v%2F-M4M3YtjaYgPpNf5qUfF%2Flogo_documentation_1.5.png?alt=media&token=2cfc26a7-9350-4fb3-bf67-2bed29ccff78",  
+  "author": {
+    "@type": "Person",
+    "name": "Patrice"
+  },  
+  "publisher": {
+    "@type": "Organization",
+    "name": "Patrice",
+    "logo": {
+      "@type": "ImageObject",
+      "url": ""
+    }
+  },
+  "datePublished": "2020-08-12",
+  "dateModified": "2020-08-12"
+}
+</script>

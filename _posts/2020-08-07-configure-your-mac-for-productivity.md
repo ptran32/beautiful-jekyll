@@ -99,3 +99,32 @@ This project is amazing, you've got all what you'll need from vim.
 I hope that it gaves you ideas for your setup.
 
 I wait for your recommendation as well ;)
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "NewsArticle",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://github.com/ptran32/ptran32.github.io/blob/master/_posts/img/03-iterm2.png?raw=true"
+  },
+  "headline": "Configure your mac for productivity",
+  "description": "Configure your mac for productivity with iterm2, zsh, vscode and spacevim",
+  "image": "https://github.com/ptran32/ptran32.github.io/blob/master/_posts/img/03-iterm2.png?raw=true",  
+  "author": {
+    "@type": "Person",
+    "name": "Patrice"
+  },  
+  "publisher": {
+    "@type": "Organization",
+    "name": "Patrice",
+    "logo": {
+      "@type": "ImageObject",
+      "url": ""
+    }
+  },
+  "datePublished": "2020-08-07",
+  "dateModified": "2020-08-07"
+}
+</script>

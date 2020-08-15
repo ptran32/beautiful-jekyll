@@ -105,3 +105,32 @@ Rancher is a great product because it does all the heavy lifting of installation
 
 [Certified Rancher Operator: Level 1](https://academy.rancher.com/courses/course-v1:RANCHER+K101+2019/about)
 
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "NewsArticle",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://ptran32.github.io/2020-07-06-kubernetes-management-with-rancher/"
+  },
+  "headline": "Kubernetes management with rancher",
+  "description": "Introduction to rancher and how to manage a kubernetes cluster with it",
+  "image": "https://rancher.com/img/brand-guidelines/assets/logos/png/color/rancher-logo-stacked-color.png",  
+  "author": {
+    "@type": "Person",
+    "name": "Patrice"
+  },  
+  "publisher": {
+    "@type": "Organization",
+    "name": "Patrice",
+    "logo": {
+      "@type": "ImageObject",
+      "url": ""
+    }
+  },
+  "datePublished": "2020-07-06",
+  "dateModified": "2020-07-06"
+}
+</script>

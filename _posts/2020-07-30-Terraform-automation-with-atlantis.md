@@ -69,3 +69,32 @@ This is the kind of tool you need if you want to have a central place where to m
 Everybody is aware of the changes, who made it, and when.
 
 It eliminates the "I work on my own stuff" and improve team visibility on your projects.
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "NewsArticle",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://ptran32.github.io/2020-07-30-Terraform-automation-with-atlantis/"
+  },
+  "headline": "Terraform automation with atlantis",
+  "description": "Use atlantis open source tool to deploy infrastructure with terraform",
+  "image": "https://github.com/ptran32/ptran32.github.io/blob/master/_posts/img/02-atlantis-success.png?raw=true",  
+  "author": {
+    "@type": "Person",
+    "name": "Patrice"
+  },  
+  "publisher": {
+    "@type": "Organization",
+    "name": "Patrice",
+    "logo": {
+      "@type": "ImageObject",
+      "url": ""
+    }
+  },
+  "datePublished": "2020-07-30",
+  "dateModified": "2020-07-30"
+}
+</script>
