@@ -5,9 +5,9 @@ subtitle:
 tags: [kubernetes]
 ---
 
-Kubernetes is a fantastic tool for managing applications, version upgrade are as easy as changing a tag, more or less :) but has some limitations when you need advance scheduling options.
+Kubernetes is a fantastic tool for managing applications, version upgrade are as easy as changing a tag, more or less :) but has some limitations when you need advanced scheduling options.
 
-Before going further, you'll need to read [https://github.com/ContainerSolutions/k8s-deployment-strategies](https://github.com/ContainerSolutions/k8s-deployment-strategies). It will provide you a comprehensive explanation on available options for native kubernetes deployment.
+Before going further, you'll need to read [https://github.com/ContainerSolutions/k8s-deployment-strategies](https://github.com/ContainerSolutions/k8s-deployment-strategies). It will provide you a comprehensive explanation of available options for native kubernetes deployment.
 
 In this post, we are going to explore how we can manage canary and blue-green deployment using [argo rollouts](https://argoproj.github.io/argo-rollouts/).
 
@@ -16,7 +16,7 @@ In this post, we are going to explore how we can manage canary and blue-green de
 
 ## Concept and challenge
 
-The default update strategy is "rollingUpdate" and will incrementally updating pods instances with new one and make sure new created pod is ready (see [readiness](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/) for more details)
+The default update strategy is "rollingUpdate" and will incrementally updating pods instances with a new one and make sure new created pod is ready (see [readiness](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/) for more details)
 
 But what if you need more control on your deployment? You're gonna need additional tools.
 
@@ -24,7 +24,7 @@ But what if you need more control on your deployment? You're gonna need addition
 ## Recall some definitions
 
 #### Canary deployment 
-is when you upgrade a small subset of an app, and allow a small amount of traffic to access it (eg: 5% of the total traffic)
+is when you upgrade a small subset of an app, and allow a small amount of traffic to access it (e.g: 5% of the total traffic)
 
 #### Blue green deployment
 is when you have two version of a same application running side by side. Blue is the idle environment, and green is the live environment.
@@ -64,7 +64,7 @@ If you have "classic" yaml manifests, you can easily switch to Argo rollouts by 
 
 ## Argo rollouts deployment
 
-Note that canary and blue green deployment can be perform with kubernetes without additional tool. But it has to done manually and using multiple steps.
+Note that canary and blue green deployment can be performed using native kubernetes. But it has to done manually and using multiple steps.
 
 - [Canary upgrade using native kubernetes](https://github.com/ContainerSolutions/k8s-deployment-strategies/tree/master/canary/native)
 - [Blue-green upgrade using native kubernetes](https://github.com/ContainerSolutions/k8s-deployment-strategies/tree/master/blue-green/single-service)
@@ -76,23 +76,23 @@ The benefit of using Argo is that these steps are managed by the controller, plu
 
 We will deploy the v1 of an application, then upgrading to v2 using canary .
 
-The app is an http server which returns the pod name and app version. The app version output is managed by an environment variable, in next section, we will change it to trigger an upgrade. 
+The app is an http server which returns the pod name and app version. The app version output is managed by an environment variable, in the next section, we will change it to trigger an upgrade. 
 
 ```
 # App output
 Host: my-app-5ff5499f6b-bjrvt, Version: v1.0.
 ```
 
-Argo provide these additional capabilities for canary:
+Argo provides these additional capabilities for canary:
 
-- fine grained control: You can define diffent batches size during the upgrade (eg: upgrade 20%, then 40%, then the rest of the pods)
-- speed control: you can wait a specific amount of time between these batches, or wait for a human validation before continuing.
+- Fine grained control: You can define the diffent batch size during the upgrade (e.g: upgrade 20%, then 40%, then the rest of the pods)
+- Speed control: you can wait a specific amount of time between these batches, or wait for a human validation before continuing.
 
-For simplicity, I've put the rollout and service into the same file.
+For simplicity, I've put the rollout and service in the same file.
 
-The manifest below define the image, number of replicas, environment variable to use etc. But more importantly define the different steps during an upgrde:
+The manifest below define the image, number of replicas, environment variable to use, etc. But more importantly define the different steps during an upgrade:
 
-- deploy 20% of the whole replicas (set to 10)
+- Deploy 20% of the total replicas (set to 10)
 - Pause the deployment, until a user confirm and "promote" it
 - Continue with 40%, wait for 10s.
 - Continue with 60%, wait for 10s
@@ -174,7 +174,7 @@ spec:
     app: my-app
 ```
 
-When you apply the manifest for the **first time**, **ALL** replicas will start without following the strategy. (more details at the end of the post)
+When you apply the manifest for the **first time**, **ALL** replicas will start without following the strategy. (More details at the end of the post)
 
 ```
 kubectl apply -f rollout.yml
@@ -185,7 +185,7 @@ NAME     DESIRED   CURRENT   UP-TO-DATE   AVAILABLE
 my-app   10        10        10           10
 ```
 
-Here's the graphical representation using [kubeview](https://github.com/benc-uk/kubeview). 
+Here's the graphical representation with [kubeview](https://github.com/benc-uk/kubeview). 
 
 ![Kubeview screenshot](https://github.com/ptran32/ptran32.github.io/blob/master/_posts/img/07-argorollouts.png?raw=true)
 
@@ -223,22 +223,37 @@ Apply the new manifest
 kubectl apply -f rollout.yml
 ```
 
-Wath the canary upgrade in live
+Watch the canary upgrade in live
 ```
 kubectl argo rollouts get rollout my-app --watch
 ```
 
-Like expected, we now have 20% of our traffic to v2 and the deployment has paused, waiting for a human validation.
+Like expected, we now have 20% of traffic to v2 and 80% to v1, the deployment has paused and is waiting for a human validation.
 
 ![argorollouts-canary screenshot](https://github.com/ptran32/ptran32.github.io/blob/master/_posts/img/08-argorollouts-canary.png?raw=true)
 
+
+You can verify it by checking the application response
+```
+for i in {1..10}; do curl "$service"; done
+Host: my-app-5ff5499f6b-qjbh8, Version: v1.0.0
+Host: my-app-5ff5499f6b-rknfk, Version: v1.0.0
+Host: my-app-6dd846bc96-ghdhl, Version: v2.0.0
+Host: my-app-5ff5499f6b-rknfk, Version: v1.0.0
+Host: my-app-5ff5499f6b-z2bst, Version: v1.0.0
+Host: my-app-5ff5499f6b-fpp6l, Version: v1.0.0
+Host: my-app-6dd846bc96-vfwk8, Version: v2.0.0
+Host: my-app-5ff5499f6b-z2bst, Version: v1.0.0
+Host: my-app-5ff5499f6b-mczv8, Version: v1.0.0
+Host: my-app-5ff5499f6b-ddxgt, Version: v1.0.0
+```
 
 If the application looks fine to you, you can now validate the rollout and promote it.
 ```
 kubectl argo rollouts promote my-app 
 ```
 
-The upgade process continue following the steps we defined before.
+The upgrade process continues following the steps we defined before.
 ![argorollouts-canary screenshot](https://github.com/ptran32/ptran32.github.io/blob/master/_posts/img/09-argorollouts-canary2.png?raw=true)
 
 
@@ -246,11 +261,11 @@ The upgade process continue following the steps we defined before.
 
 To keep this post short, this part will be shorter than the previous one.
 
-Basically a blue green deployment manifest looks the same than than the previous one. The main two values to retain are:
-- activeService(which point to the service of v1 of the app)
-- previewService(which point to the service of v2 of the app)
+Basically a blue green deployment manifest looks almost the same than the canary. The main two values to retain are:
+- activeService(which point to the kubernetes service of version1)
+- previewService(which point to the kubernetes service of version2)
 
-Both are independant, and the switch from v1 to v2 is made by pointing the activeService to the replicaSet of v2.
+Both versions of the application are running alongside, each one has his own kubernetes service and the switch from v1 to v2 is made by pointing the activeService to the replicaSet of v2.
 
 
 **Create the v1 application**
@@ -258,22 +273,19 @@ Both are independant, and the switch from v1 to v2 is made by pointing the activ
 kubectl apply -f https://raw.githubusercontent.com/argoproj/argo-rollouts/master/examples/rollout-bluegreen.yaml
 ```
 
-Note that both services point to v1 for now, it's fine, because in a real world, we would only allow traffic to the active service.
+Note that both services point to v1 for now, it's fine, because, in a real-world, we would only allow traffic to the active service.
 ![argorollouts-canary screenshot](https://github.com/ptran32/ptran32.github.io/blob/master/_posts/img/10-argorollouts-bluegreen.png?raw=true)
 
 
 **Create the v2 application**
 
-Modify the v1 manifest and change the image field to the new value. That's the lazy way to trigger an update, never do that in a real environment :)
+Modify the image tag of the application to trigger an upgrade.
 ```
-kubectl edit rollouts rollout-bluegreen (truncated output).
-
-...
-image: argoproj/rollouts-demo:green
-...
+kubectl argo rollouts set image rollout-bluegreen \ # rollout-bluegreen is the rollout's name
+  rollouts-demo=argoproj/rollouts-demo:green # rollouts-demo is the container name we set in the yaml
 ```
 
-You should now have v1 and v2 running alongside. (it's not obvious on the diagram, but each service points to one version of the app)
+You should now have v1 and v2 running alongside. (It's not obvious on the diagram, but each service points to one version of the app)
 ![argorollouts-canary screenshot](https://github.com/ptran32/ptran32.github.io/blob/master/_posts/img/13-argorollouts-bluegreen.png?raw=true)
 
 ![argorollouts-canary screenshot](https://github.com/ptran32/ptran32.github.io/blob/master/_posts/img/11-argorollouts-bluegreen.png?raw=true)
@@ -284,7 +296,7 @@ If the application looks fine to you, you can now promote the rollout.
 kubectl argo rollouts promote rollout-bluegreen
 ```
 
-The ActiveService now points to the v2 ReplicaSet and argo scaled down the v1.
+The ActiveService now points to the v2 ReplicaSet and Argo scaled down the v1.
 
 ![argorollouts-canary screenshot](https://github.com/ptran32/ptran32.github.io/blob/master/_posts/img/12-argorollouts-bluegreen.png?raw=true)
 
@@ -296,7 +308,7 @@ The ActiveService now points to the v2 ReplicaSet and argo scaled down the v1.
 
 I did not talk about advanced feature like "Analysis" which allow to test your application during an upgrade via a prometheus query. Argo can decide to abort or continue the upgrade based on metrics you've defined.
 
-I had one issue when I created a blue green deployment, I was trying to upgrade the existing application used in canary section, but argo automatically switched the old version of the app to the new one, without honoring the parameter 'autoPromotionEnabled: false'. 
+I had one issue when I created a blue-green deployment, I was trying to upgrade the existing application used in the canary section, but Argo automatically switched the old version of the app to the new one, without honoring the parameter 'autoPromotionEnabled: false'. 
 
 It's a known limitation:
 ```
@@ -304,4 +316,35 @@ As with Deployments, Rollouts does not follow the strategy parameters on the ini
 Once the Rollout has a stable ReplicaSet to transition from, the controller starts using the provided strategy to transition the previous ReplicaSet to the desired ReplicaSet.
 ```
 
-I hope you liked this introduction to argo rollouts ;)
+I hope you liked this introduction to Argo rollouts ;)
+
+
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "NewsArticle",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://ptran32.github.io/2020-08-14-control-your-kubernetes-deployment-with-argo-rollouts/"
+  },
+  "headline": "Control your kubernetes deployment with argo rollouts",
+  "description": "Control your kubernetes deployment with argo rollouts",
+  "image": "https://raw.githubusercontent.com/ptran32/ptran32.github.io/master/_posts/img/08-argorollouts-canary.png",  
+  "author": {
+    "@type": "Person",
+    "name": "Patrice"
+  },  
+  "publisher": {
+    "@type": "Organization",
+    "name": "Patrice",
+    "logo": {
+      "@type": "ImageObject",
+      "url": ""
+    }
+  },
+  "datePublished": "2020-08-14",
+  "dateModified": "2020-08-15"
+}
+</script>
