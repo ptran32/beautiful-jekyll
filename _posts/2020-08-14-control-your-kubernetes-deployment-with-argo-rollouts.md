@@ -5,8 +5,6 @@ subtitle:
 tags: [logs]
 ---
 
-# WIP
-
 Kubernetes is a fantastic tool for managing applications, version upgrade are as easy as changing a tag, more or less :) but has some limitations when you need advance scheduling options.
 
 Before going further, you'll need to read [https://github.com/ContainerSolutions/k8s-deployment-strategies](https://github.com/ContainerSolutions/k8s-deployment-strategies). It will provide you a comprehensive explanation on available options for native kubernetes deployment.
