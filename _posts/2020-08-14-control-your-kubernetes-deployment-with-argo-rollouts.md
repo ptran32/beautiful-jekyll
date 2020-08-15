@@ -296,6 +296,8 @@ The ActiveService now points to the v2 ReplicaSet and scaled down the v1.
 
 ![argorollouts-canary screenshot](https://github.com/ptran32/ptran32.github.io/blob/master/_posts/img/12-argorollouts-bluegreen.png?raw=true)
 
+![argorollouts-canary screenshot](https://github.com/ptran32/ptran32.github.io/blob/master/_posts/img/14-argorollouts-bluegreen.png?raw=true)
+
 
 
 ## Conclusion
