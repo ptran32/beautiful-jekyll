@@ -2,7 +2,7 @@
 layout: post
 title: Control your kubernetes deployment with argo rollouts
 subtitle:
-tags: [logs]
+tags: [kubernetes]
 ---
 
 Kubernetes is a fantastic tool for managing applications, version upgrade are as easy as changing a tag, more or less :) but has some limitations when you need advance scheduling options.
