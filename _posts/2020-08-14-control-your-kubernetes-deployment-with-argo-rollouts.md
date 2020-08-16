@@ -2,7 +2,7 @@
 layout: post
 title: Control your kubernetes deployment with argo rollouts
 subtitle:
-tags: [kubernetes]
+tags: [containers]
 ---
 
 Kubernetes is a fantastic tool for managing applications, version upgrade are as easy as changing a tag, more or less :) but has some limitations when you need advanced scheduling options.
@@ -85,7 +85,7 @@ Host: my-app-5ff5499f6b-bjrvt, Version: v1.0.
 
 Argo provides these additional capabilities for canary:
 
-- Fine grained control: You can define the diffent batch size during the upgrade (e.g: upgrade 20%, then 40%, then the rest of the pods)
+- Fine grained control: You can define the different batch size during the upgrade (e.g: upgrade 20%, then 40%, then the rest of the pods)
 - Speed control: you can wait a specific amount of time between these batches, or wait for a human validation before continuing.
 
 For simplicity, I've put the rollout and service in the same file.
@@ -93,7 +93,7 @@ For simplicity, I've put the rollout and service in the same file.
 The manifest below define the image, number of replicas, environment variable to use, etc. But more importantly define the different steps during an upgrade:
 
 - Deploy 20% of the total replicas (set to 10)
-- Pause the deployment, until a user confirm and "promote" it
+- Pause the deployment, until a user manually "promote" it
 - Continue with 40%, wait for 10s.
 - Continue with 60%, wait for 10s
 - Continue with 80%, wait for 10s
@@ -317,8 +317,6 @@ Once the Rollout has a stable ReplicaSet to transition from, the controller star
 ```
 
 I hope you liked this introduction to Argo rollouts ;)
-
-
 
 
 <script type="application/ld+json">

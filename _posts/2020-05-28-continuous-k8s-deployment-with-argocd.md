@@ -5,7 +5,7 @@ subtitle:
 tags: [containers]
 ---
 
-My first post, thanks to Covid19, I've got more times to do what I like, testing new stuffs. I've decided to post small posts on what I'm interested right now.
+My first post, with covid19, I've got more times to do what I like, testing new stuffs. I've decided to post small posts on what I'm interested right now.
 I would like to write about an amazing tool in the k8s world: ArgoCD
 I started to look at this tool earlier this year for my personal knowledge, and I wanted to share this post, so some people could have an overview of the tool, and test it. Enjoy :)
 
