@@ -7,7 +7,7 @@ tags: [tips]
 
 Today we'll talk about how you can increase your website visibility on Google using very simple SEO techniques.
 
-SEO means "Search Engine Optimization" is a method to optimize a website have the best rank position when searching keywords on the web.
+SEO means *Search Engine Optimization* is a method to optimize a website have the best rank position when searching keywords on the web.
 
 I'm not an expert in this topic, I do know the very basic concept and I'll explain how did I increase my blog visibility with Google.
 
@@ -18,12 +18,12 @@ I'm not an expert in this topic, I do know the very basic concept and I'll expla
 
 For your website to be found on Google, the user has to put keywords in the search bar. This is here where Google algorithms work behind the scene in order to filter and rank your website among thousand of results.
 
-Google has some criteria in order to do that:
+**Google has some criteria in order to do that**
 
 - Load page time of your website
 - Content (quality, relevance)
 - Notoriety (when other people "talk" about your website. E.g: one blogger put on his website, a link to yours. We also call it "backlink")
-- User behaviour (Number of view page, duration of visit, rebound rate: when people land on your site and immediately quit it)
+- User behaviour (duration of visit, rebound rate: when people land on your site and immediately quit it)
 
 ## Naming
 
@@ -31,15 +31,17 @@ I know that having a URI which contains keywords that match your topic help to h
 
 ## Description
 
-Try to put a description of your article which contains keywords as well.
+Put a full description of your article with full sentence which contains keywords, of course.
+
+For instance: "How-to manage customers when your Java application is down? There is no issue."
 
 ## Use a sitemap
 
-A sitemap is the blueprint of your website, it's a file at the root of your website (XML format for mine). When you have this file, you can manually indicate to Google it's location: [https://search.google.com/](https://search.google.com/)
+A sitemap is the blueprint of your website, it's a file at the root of your website (XML format for mine). It is use by search engine (Google, Yahoo and Bing) ton find different pages in your website.
 
 You use a [generator](https://technicalseo.com/tools/schema-markup-generator/) to create it.
 
-"If your site’s pages are properly linked, our web crawlers can usually discover most of your site."
+Then you can manually indicate to Google it's location: [https://search.google.com/](https://search.google.com/)
 
 
 ## Index your urls manually
@@ -49,10 +51,9 @@ Google do it automatically, in my case, I don't have too many URL's and I found 
 ![indexUrl screenshot](https://github.com/ptran32/ptran32.github.io/blob/master/_posts/img/15-seo.png?raw=true)
 
 
-
 ## Use schema markup
 
-[Schema Markup](https://moz.com/learn/seo/schema-structured-data) is metadata data that you add to your html. I believe that it helps for search ranking. This schema has to be put in your html file (whatever section, Yolo)
+[Schema Markup](https://moz.com/learn/seo/schema-structured-data) is metadata data that you add to your html with the purpose of helping the search engines return more informative results for users. Schema markup allows you to create enhanced descriptions that appear in search results.
 
 You can generate a schema markup for your page here: [https://technicalseo.com/tools/schema-markup-generator/](https://technicalseo.com/tools/schema-markup-generator/)
 
@@ -67,8 +68,9 @@ Add a [analytics global site tag](https://support.google.com/analytics/answer/10
 - Used device (mobile or laptop)
 - And more
 
-![Performance screenshot](https://github.com/ptran32/ptran32.github.io/blob/master/_posts/img/16-seo.png?raw=true)
+You can view these metrics here: [https://analytics.google.com/](https://analytics.google.com/)
 
+![Performance screenshot](https://github.com/ptran32/ptran32.github.io/blob/master/_posts/img/16-seo.png?raw=true)
 
 
 ## Conclusion
