@@ -7,7 +7,7 @@ tags: [tips]
 
 Today we'll talk about how you can increase your website visibility on Google using very simple SEO techniques.
 
-SEO means *Search Engine Optimization* is a method to optimize a website have the best rank position when searching keywords on the web.
+SEO means *Search Engine Optimization* and is a method to optimize website and get the best rank position when searching keywords on the web.
 
 I'm not an expert in this topic, I do know the very basic concept and I'll explain how did I increase my blog visibility with Google.
 
@@ -33,7 +33,7 @@ I know that having a URI which contains keywords that match your topic help to h
 
 Put a full description of your article with full sentence which contains keywords, of course.
 
-For instance: "How-to manage customers when your Java application is down? There is no issue."
+For instance: "How-to handle an outage when a java doesn't want to start again? Fingercross"
 
 ## Use a sitemap
 
