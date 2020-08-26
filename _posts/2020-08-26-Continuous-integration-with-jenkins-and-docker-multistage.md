@@ -66,7 +66,6 @@ I resolved that, either by:
 +    "temp-directory": "/tmp/.nyc_output",
 +    "report-dir": "/tmp/coverage"
 ```
-
 <p>&nbsp;</p>
 
 ## Actually, let's run the tests in a multi-stage build
@@ -80,7 +79,8 @@ I will include the tests in the image build process with [multi-stage builds](ht
 
 First, I wanted to review the original Dockerfile, and see what I could improve.
 
-I ended up with:
+The result:
+
 - Image size of **55.4MB** instead of **354MB**
 - Use a non-root instead of the default root.
 - Included tests
@@ -139,7 +139,7 @@ CMD ["node", "server/server.js"]
 <p>&nbsp;</p>
 
 
-## Prepare the pipeline
+## Prepare the Jenkins pipeline
 
 The Jenkinsfile is split between the stages below:
 
@@ -214,10 +214,9 @@ pipeline {
 
 <p>&nbsp;</p>
 
-# Run the pipeline
+# Run the Jenkins pipeline
 
 Here's the full pipeline after all steps succeed.
-
 ```
  GET /
     ✓ responds with homepage (41ms)
@@ -255,6 +254,8 @@ Application is now accessible at **http://node_ip:8080**
 ![cicd screenshot](https://github.com/ptran32/ptran32.github.io/blob/master/_posts/img/19-cicd.png?raw=true)
 
 
+<p>&nbsp;</p>
+
 ## Conclusion
 
 This is a simple CI/CD pipeline, this might not be flexible enough for your environment or you might want to add a manual validation before deploying new releases to your cluster. But I hope this blog gave you some ideas.
@@ -266,10 +267,7 @@ Hope you guys liked it, see you soon ;)
 
 ## Useful links
 
-[https://docs.gitlab.com/ee/ci/](https://docs.gitlab.com/ee/ci/)
-
-[https://jenkins-x.io/](https://jenkins-x.io/)
-
-[https://spinnaker.io/](https://spinnaker.io/)
-
-[https://codefresh.io/](https://codefresh.io/)
+- [https://docs.gitlab.com/ee/ci/](https://docs.gitlab.com/ee/ci/)
+- [https://jenkins-x.io/](https://jenkins-x.io/)
+- [https://spinnaker.io/](https://spinnaker.io/)
+- [https://codefresh.io/](https://codefresh.io/)
