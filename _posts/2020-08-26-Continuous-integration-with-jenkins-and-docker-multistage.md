@@ -2,20 +2,20 @@
 layout: post
 title: CI/CD with jenkins and docker multistage build
 subtitle:
-tags: [containers]
+tags: [automation]
 ---
 
-Nowadays, the main goal of every tech company is to ship often and have users feedback as fast as possible. 
+Nowadays, the main goal of every tech company is to ship often and have user feedback as fast as possible. 
 
 There's many practices and tools in order to accomplish that, but today I'll focus on *continuous integration* and *continuous deployment*.
 
-Atlassian explain very well the difference between continuous integration, continuous delivery and continuous deployment. [link here](https://www.atlassian.com/continuous-delivery/principles/continuous-integration-vs-delivery-vs-deployment)
+Atlassian explains very well the difference between continuous integration, continuous delivery and continuous deployment. [link here](https://www.atlassian.com/continuous-delivery/principles/continuous-integration-vs-delivery-vs-deployment)
 
 But I'll summarize it in few words:
 
-- **Continuous Integration**: Automatic build and tests to be able to detect issues in the code quickly
-- **Continuous Deliver**y: Be able release a new version of an application at any moment and deploy it in lower environements (dev/staging/integration)
-- **Continuous Deployment**: It's the same thing than Continuous Delivery, except that there is no manual steps from developper commit to production environment.
+- **Continuous Integration**: Automatic builds and tests to be able to detect issues in the code quickly
+- **Continuous Deliver**y: Be able release a new version of an application at any moment and deploy it in lower environments (dev/staging/integration)
+- **Continuous Deployment**: It's the same thing than Continuous Delivery, except that there are no manual steps from developers commit to production environment.
 
 
 ![Jenkins logo](https://www.jenkins.io/images/logos/jenkins-is-the-way/256.png)
@@ -27,7 +27,7 @@ But I'll summarize it in few words:
 
 - For continuous integration and continuous deployment, I chose *Jenkins*
 
-This time, I go with Jenkins, not because I like it, but because during an interview, I was asked for a proof on using a Jenkins pipeline, I didn't have any. So here we go ! 
+This time, I go with Jenkins, not because I like it, but because during an interview, I was asked for a proof on using a Jenkins pipeline, I didn't have any. So here we go!
 
 In a general way, I think it's always good for a recruiter to see your work, so during the interview, the questions are gonna be concrete and around what you've done and what you could have done.
 
@@ -39,14 +39,14 @@ You can found the Jenkinsfile and the kubernetes manifest used in my repo: [here
 My initial plan was to separate my pipeline with the Jenkins stages below:
 
 - Clone git source
-- Build image image
-- Test image <-- **BIG FAILURE**
+- Build docker image
+- Run tests <-- **BIG FAILURE**
 - Push image to docker registry
 - Deploy new code to a kubernetes cluster
 
-Using [docker pipeline plugin](https://docs.cloudbees.com/docs/admin-resources/latest/plugins/docker-workflow), I had a headache during the test step to find out why it failed.
+Using [docker pipeline plugin](https://docs.cloudbees.com/docs/admin-resources/latest/plugins/docker-workflow), I had trouble during the test step to find out why it failed.
 
-It failed, with only an exit 1 status. So I decided to manually run the docker command used by Jenkins during the build (the command was display on the Jenkins console output).
+It failed, with only an "exit 1" status. So I decided to manually run the docker command used by Jenkins during the build (the command was displayed on the Jenkins console output).
 
 ``` 
 docker run -it  -u 997:994 -w /var/lib/jenkins/workspace/nodejs-express -v /var/lib/jenkins/workspace/nodejs-express:/var/lib/jenkins/workspace/nodejs-express:rw,z ptran32/nodejs-express-app:6486807
@@ -54,31 +54,38 @@ docker run -it  -u 997:994 -w /var/lib/jenkins/workspace/nodejs-express -v /var/
 
 **What ?**
 
-For every build, the plugin will run a docker container as jenkins user, mount the current workspace and set it as current working directory.
+For every build, the plugin will run a docker container as Jenkins user, mount the current workspace and set it as current working directory.
 
-Inside the container, I ran "npm test", it showed that it was a permission issue. Because we are running a container as jenkins user and [mocha](https://mochajs.org/) tries to create a folder in /app, but doesn't have the rights to do so.
+Inside the container, I ran "npm test", it showed that it was a permission issue. Because we are running a container as Jenkins user and [mocha](https://mochajs.org/) tries to create a folder in /app, but doesn't have the rights to do so.
 
 I resolved that, either by: 
-- specifying the -u root parameter in Jenkinsfile (not the best practice, indeed. But avoid me to deal with docker/user permissions)
-- Modify package.json and put the test results somewhere else (see below)
+- Specifying the -u root parameter in Jenkinsfile (not the best practice, indeed. But avoid me to deal with docker/user permissions)
+- Modify package.json and put the test results somewhere else where Jenkins user can write (see below)
 
 ```
 +    "temp-directory": "/tmp/.nyc_output",
 +    "report-dir": "/tmp/coverage"
 ```
 
+<p>&nbsp;</p>
+
 ## Actually, let's run the tests in a multi-stage build
 
-I found the docker pipeline plugin painful to use (limited declarative syntax) and the lack of documentation litteraly killed me. So I decided to take another approach.
+I found the docker pipeline plugin painful to use (limited declarative syntax) and the lack of documentation literaly killed me. So I decided to take another approach.
 
 I will include the tests in the image build process with [multi-stage builds](https://docs.docker.com/develop/develop-images/multistage-build/).
 
 
 ## Prepare the multi-stage build and include the tests
 
-Firstable, I wanted to review the original Dockerfile, which run as root and generate an image of **354MB**. I wanted to reduce it as much as possible and reduce the security exposures.
+First, I wanted to review the original Dockerfile, and see what I could improve.
 
-I ended up with a final image of **55.4MB** with a non-root user using the Dockerfile below.
+I ended up with:
+- Image size of **55.4MB** instead of **354MB**
+- Use a non-root instead of the default root.
+- Included tests
+- Use [tini](https://github.com/krallin/tini) as entrypoint
+
 
 ```
 FROM node:current-alpine3.11 AS build
@@ -129,15 +136,18 @@ ENTRYPOINT ["/sbin/tini", "--"]
 CMD ["node", "server/server.js"]
 ```
 
+<p>&nbsp;</p>
+
+
 ## Prepare the pipeline
 
-The Jenkinsfile declare those steps
+The Jenkinsfile is split between the stages below:
 
 - Clean workspace
 - Clone git source
 - Test and build docker image
 - Push image to docker registry
-- Deploy new code to a kubernetes cluster
+- Deploy new release to a kubernetes cluster
 
 ```
 pipeline {
@@ -200,8 +210,9 @@ pipeline {
         }
     }
 }
-
 ```
+
+<p>&nbsp;</p>
 
 # Run the pipeline
 
@@ -239,17 +250,26 @@ Lines        : 100% ( 34/34 )
 
 ![cicd screenshot](https://github.com/ptran32/ptran32.github.io/blob/master/_posts/img/18-cicd.png?raw=true)
 
-Application is now accessible at http://node_ip:8080
+Application is now accessible at **http://node_ip:8080**
 
-![cicd screenshot](https://github.com/ptran32/ptran32.github.io/blob/master/_posts/img/18-cicd.png?raw=true)
+![cicd screenshot](https://github.com/ptran32/ptran32.github.io/blob/master/_posts/img/19-cicd.png?raw=true)
 
 
 ## Conclusion
 
-This is a simple CI/CD pipeline, this might not be flexible enough in your environment, and you might want to add a manual validation before deploying new releases to your cluster.
+This is a simple CI/CD pipeline, this might not be flexible enough for your environment or you might want to add a manual validation before deploying new releases to your cluster. But I hope this blog gave you some ideas.
 
-To reach the Continuous Deployment is a hard task, you really need to have a clean and nice infrastructure, tools, process in place.
+You could also add a security scan like stage with [clair](https://coreos.com/clair/docs/latest/), [aquasec](https://www.aquasec.com/), [twistlock](https://www.twistlock.com/use-cases/docker-security-platform/).
 
 Hope you guys liked it, see you soon ;)
 
 
+## Useful links
+
+[https://docs.gitlab.com/ee/ci/](https://docs.gitlab.com/ee/ci/)
+
+[https://jenkins-x.io/](https://jenkins-x.io/)
+
+[https://spinnaker.io/](https://spinnaker.io/)
+
+[https://codefresh.io/](https://codefresh.io/)
