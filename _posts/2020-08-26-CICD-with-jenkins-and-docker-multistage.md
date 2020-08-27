@@ -13,8 +13,8 @@ Atlassian explains very well the difference between continuous integration, cont
 
 But I'll summarize it in few words:
 
-- **Continuous Integration**: Automatic builds and tests to be able to detect issues in the code quickly
-- **Continuous Deliver**y: Be able release a new version of an application at any moment and deploy it in lower environments (dev/staging/integration)
+- **Continuous Integration**: When new code is integrated frequently with automatic builds and tests to be able to detect issues quickly
+- **Continuous Deliver**y: Be able to release a new version of an application at any moment and deploy it in lower environments (dev/staging/integration)
 - **Continuous Deployment**: It's the same thing than Continuous Delivery, except that there are no manual steps from developers commit to production environment.
 
 
@@ -82,7 +82,7 @@ First, I wanted to review the original Dockerfile, and see what I could improve.
 The result:
 
 - Image size of **55.4MB** instead of **354MB**
-- Use a non-root instead of the default root.
+- Use a non-root user instead of the default root.
 - Included tests
 - Use [tini](https://github.com/krallin/tini) as entrypoint
 
@@ -260,7 +260,7 @@ Application is now accessible at **http://node_ip:8080**
 
 This is a simple CI/CD pipeline, this might not be flexible enough for your environment or you might want to add a manual validation before deploying new releases to your cluster. But I hope this blog gave you some ideas.
 
-You could also add a security scan like stage with [clair](https://coreos.com/clair/docs/latest/), [aquasec](https://www.aquasec.com/), [twistlock](https://www.twistlock.com/use-cases/docker-security-platform/).
+You could also add a security scan stage with [clair](https://coreos.com/clair/docs/latest/), [aquasec](https://www.aquasec.com/), or [twistlock](https://www.twistlock.com/use-cases/docker-security-platform/).
 
 Hope you guys liked it, see you soon ;)
 
